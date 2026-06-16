@@ -246,6 +246,23 @@ cd ayni-metricas-service && mvn spring-boot:run &
 
 ---
 
+## Herramientas de desarrollo
+
+| Recurso | Link |
+|---|---|
+| **Postman Collection (todos los servicios)** | [somos-ayni-microservices.postman_collection.json](https://github.com/ayni-01/.github/blob/main/somos-ayni-microservices.postman_collection.json) |
+| **Swagger UI identidad** | http://localhost:8081/swagger-ui.html |
+| **Swagger UI perfiles** | http://localhost:8082/swagger-ui.html |
+| **Swagger UI retos** | http://localhost:8083/swagger-ui.html |
+| **Swagger UI postulaciones** | http://localhost:8084/swagger-ui.html |
+| **Swagger UI habilidades** | http://localhost:8085/swagger-ui.html |
+| **Swagger UI notificaciones** | http://localhost:8086/swagger-ui.html |
+| **Swagger UI métricas** | http://localhost:8087/swagger-ui.html |
+
+> La colección Postman tiene carpetas separadas por servicio, variables compartidas (`TOKEN_EMPRESA`, `TOKEN_TALENTO`, `RETO_ID`, etc.) y scripts que auto-rellenan tokens e IDs al ejecutar los requests de registro/login.
+
+---
+
 ## Stack Tecnológico
 
 | Tecnología | Versión |
