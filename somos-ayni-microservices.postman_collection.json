@@ -1,0 +1,383 @@
+{
+  "info": {
+    "name": "Somos Ayni — Microservicios",
+    "description": "Colección completa para probar los 7 microservicios de Somos Ayni. Flujo de negocio: Registro → Perfiles → Retos → Postulaciones → Evaluación → Insignias → Notificaciones → Métricas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "BASE_IDENTIDAD", "value": "http://localhost:8081" },
+    { "key": "BASE_PERFILES", "value": "http://localhost:8082" },
+    { "key": "BASE_RETOS", "value": "http://localhost:8083" },
+    { "key": "BASE_POSTULACIONES", "value": "http://localhost:8084" },
+    { "key": "BASE_HABILIDADES", "value": "http://localhost:8085" },
+    { "key": "BASE_NOTIFICACIONES", "value": "http://localhost:8086" },
+    { "key": "BASE_METRICAS", "value": "http://localhost:8087" },
+    { "key": "TOKEN_EMPRESA", "value": "" },
+    { "key": "TOKEN_TALENTO", "value": "" },
+    { "key": "ID_EMPRESA", "value": "" },
+    { "key": "ID_TALENTO", "value": "" },
+    { "key": "RETO_ID", "value": "" },
+    { "key": "POSTULACION_ID", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1 — Identidad (Auth)",
+      "item": [
+        {
+          "name": "Registro Empresa",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('TOKEN_EMPRESA', res.token);",
+            "pm.collectionVariables.set('ID_EMPRESA', res.usuarioId);",
+            "pm.test('Registro empresa OK', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"empresa@somosayni.com\",\n  \"password\": \"Pass1234!\",\n  \"rol\": \"EMPRESA\"\n}" },
+            "url": { "raw": "{{BASE_IDENTIDAD}}/api/v1/auth/registro", "host": ["{{BASE_IDENTIDAD}}"], "path": ["api","v1","auth","registro"] }
+          }
+        },
+        {
+          "name": "Registro Talento",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('TOKEN_TALENTO', res.token);",
+            "pm.collectionVariables.set('ID_TALENTO', res.usuarioId);",
+            "pm.test('Registro talento OK', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"talento@somosayni.com\",\n  \"password\": \"Pass1234!\",\n  \"rol\": \"TALENTO\"\n}" },
+            "url": { "raw": "{{BASE_IDENTIDAD}}/api/v1/auth/registro", "host": ["{{BASE_IDENTIDAD}}"], "path": ["api","v1","auth","registro"] }
+          }
+        },
+        {
+          "name": "Login Empresa",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('TOKEN_EMPRESA', res.token);",
+            "pm.test('Login OK', () => pm.response.to.have.status(200));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"empresa@somosayni.com\",\n  \"password\": \"Pass1234!\"\n}" },
+            "url": { "raw": "{{BASE_IDENTIDAD}}/api/v1/auth/login", "host": ["{{BASE_IDENTIDAD}}"], "path": ["api","v1","auth","login"] }
+          }
+        },
+        {
+          "name": "Login Talento",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('TOKEN_TALENTO', res.token);",
+            "pm.test('Login OK', () => pm.response.to.have.status(200));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"talento@somosayni.com\",\n  \"password\": \"Pass1234!\"\n}" },
+            "url": { "raw": "{{BASE_IDENTIDAD}}/api/v1/auth/login", "host": ["{{BASE_IDENTIDAD}}"], "path": ["api","v1","auth","login"] }
+          }
+        },
+        {
+          "name": "Cambiar Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"passwordActual\": \"Pass1234!\",\n  \"nuevaPassword\": \"NuevaPass456!\"\n}" },
+            "url": { "raw": "{{BASE_IDENTIDAD}}/api/v1/auth/cambiar-password", "host": ["{{BASE_IDENTIDAD}}"], "path": ["api","v1","auth","cambiar-password"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 — Perfiles",
+      "item": [
+        {
+          "name": "Crear Perfil Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"razonSocial\": \"Tech Perú SAC\",\n  \"ruc\": \"20123456789\",\n  \"sector\": \"Tecnología\"\n}" },
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/empresa", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","empresa"] }
+          }
+        },
+        {
+          "name": "Crear Perfil Talento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreCompleto\": \"Juan Pérez\"\n}" },
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento"] }
+          }
+        },
+        {
+          "name": "Obtener Perfil Empresa",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/empresa/{{ID_EMPRESA}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","empresa","{{ID_EMPRESA}}"] }
+          }
+        },
+        {
+          "name": "Obtener Perfil Talento",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{ID_TALENTO}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{ID_TALENTO}}"] }
+          }
+        },
+        {
+          "name": "Editar Perfil Talento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombreCompleto\": \"Juan Pérez García\",\n  \"ubicacion\": \"Lima, Perú\",\n  \"sobreMi\": \"Desarrollador backend con experiencia en Java y Spring Boot\"\n}" },
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{ID_TALENTO}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{ID_TALENTO}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 — Retos",
+      "item": [
+        {
+          "name": "Publicar Reto",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('RETO_ID', res.id);",
+            "pm.test('Reto creado', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Desarrollar API REST con Spring Boot\",\n  \"descripcion\": \"Crear una API RESTful completa con autenticación JWT, documentación Swagger y pruebas unitarias\",\n  \"empresaId\": \"{{ID_EMPRESA}}\",\n  \"modalidad\": \"REMOTO\",\n  \"duracionDias\": 30\n}" },
+            "url": { "raw": "{{BASE_RETOS}}/api/v1/retos", "host": ["{{BASE_RETOS}}"], "path": ["api","v1","retos"] }
+          }
+        },
+        {
+          "name": "Listar Retos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_RETOS}}/api/v1/retos", "host": ["{{BASE_RETOS}}"], "path": ["api","v1","retos"] }
+          }
+        },
+        {
+          "name": "Cerrar Reto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_RETOS}}/api/v1/retos/{{RETO_ID}}/cerrar", "host": ["{{BASE_RETOS}}"], "path": ["api","v1","retos","{{RETO_ID}}","cerrar"] }
+          }
+        },
+        {
+          "name": "Duplicar Reto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_RETOS}}/api/v1/retos/{{RETO_ID}}/duplicar", "host": ["{{BASE_RETOS}}"], "path": ["api","v1","retos","{{RETO_ID}}","duplicar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 — Postulaciones",
+      "item": [
+        {
+          "name": "Postular a Reto",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('POSTULACION_ID', res.id);",
+            "pm.test('Postulación creada', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"retoId\": \"{{RETO_ID}}\",\n  \"urlSolucion\": \"https://github.com/juanperez/api-rest-solution\"\n}" },
+            "url": { "raw": "{{BASE_POSTULACIONES}}/api/v1/postulaciones", "host": ["{{BASE_POSTULACIONES}}"], "path": ["api","v1","postulaciones"] }
+          }
+        },
+        {
+          "name": "Ver Postulaciones del Reto",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_POSTULACIONES}}/api/v1/postulaciones/reto/{{RETO_ID}}", "host": ["{{BASE_POSTULACIONES}}"], "path": ["api","v1","postulaciones","reto","{{RETO_ID}}"] }
+          }
+        },
+        {
+          "name": "Historial del Talento",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_POSTULACIONES}}/api/v1/postulaciones/talento/{{ID_TALENTO}}", "host": ["{{BASE_POSTULACIONES}}"], "path": ["api","v1","postulaciones","talento","{{ID_TALENTO}}"] }
+          }
+        },
+        {
+          "name": "Evaluar Postulación (APROBADO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"puntuacion\": 92,\n  \"feedback\": \"Excelente implementación con Spring Boot y JWT\",\n  \"resultado\": \"APROBADO\"\n}" },
+            "url": { "raw": "{{BASE_POSTULACIONES}}/api/v1/postulaciones/{{POSTULACION_ID}}/evaluar", "host": ["{{BASE_POSTULACIONES}}"], "path": ["api","v1","postulaciones","{{POSTULACION_ID}}","evaluar"] }
+          }
+        },
+        {
+          "name": "Evaluar Postulación (RECHAZADO)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"puntuacion\": 45,\n  \"feedback\": \"Falta documentación y pruebas unitarias\",\n  \"resultado\": \"RECHAZADO\"\n}" },
+            "url": { "raw": "{{BASE_POSTULACIONES}}/api/v1/postulaciones/{{POSTULACION_ID}}/evaluar", "host": ["{{BASE_POSTULACIONES}}"], "path": ["api","v1","postulaciones","{{POSTULACION_ID}}","evaluar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 — Habilidades e Insignias",
+      "item": [
+        {
+          "name": "Otorgar Insignia al Talento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"talentoId\": \"{{ID_TALENTO}}\",\n  \"retoId\": \"{{RETO_ID}}\",\n  \"titulo\": \"API REST con Spring Boot\",\n  \"tipo\": \"VERIFICADO\"\n}" },
+            "url": { "raw": "{{BASE_HABILIDADES}}/api/v1/insignias", "host": ["{{BASE_HABILIDADES}}"], "path": ["api","v1","insignias"] }
+          }
+        },
+        {
+          "name": "Ver Insignias del Talento",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_HABILIDADES}}/api/v1/insignias/talento/{{ID_TALENTO}}", "host": ["{{BASE_HABILIDADES}}"], "path": ["api","v1","insignias","talento","{{ID_TALENTO}}"] }
+          }
+        },
+        {
+          "name": "Registrar Habilidad",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Spring Boot\",\n  \"nivel\": \"AVANZADO\"\n}" },
+            "url": { "raw": "{{BASE_HABILIDADES}}/api/v1/habilidades", "host": ["{{BASE_HABILIDADES}}"], "path": ["api","v1","habilidades"] }
+          }
+        },
+        {
+          "name": "Ver Portafolio Talento",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_HABILIDADES}}/api/v1/habilidades/portafolio/{{ID_TALENTO}}", "host": ["{{BASE_HABILIDADES}}"], "path": ["api","v1","habilidades","portafolio","{{ID_TALENTO}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 — Notificaciones",
+      "item": [
+        {
+          "name": "Enviar Notificación",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"destinatarioId\": \"{{ID_TALENTO}}\",\n  \"tipo\": \"APROBADO\",\n  \"mensaje\": \"¡Felicitaciones! Tu postulación al reto fue aprobada.\"\n}" },
+            "url": { "raw": "{{BASE_NOTIFICACIONES}}/api/v1/notificaciones", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["api","v1","notificaciones"] }
+          }
+        },
+        {
+          "name": "Ver Mis Notificaciones",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_NOTIFICACIONES}}/api/v1/notificaciones", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["api","v1","notificaciones"] }
+          }
+        },
+        {
+          "name": "Ver Notificaciones No Leídas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_NOTIFICACIONES}}/api/v1/notificaciones?leida=false", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["api","v1","notificaciones"], "query": [{ "key": "leida", "value": "false" }] }
+          }
+        },
+        {
+          "name": "Marcar Notificación como Leída",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_NOTIFICACIONES}}/api/v1/notificaciones/:id/leida", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["api","v1","notificaciones",":id","leida"], "variable": [{ "key": "id", "value": "{{NOTIFICACION_ID}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7 — Métricas",
+      "item": [
+        {
+          "name": "Métricas de la Empresa",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_METRICAS}}/api/v1/metricas/empresa/{{ID_EMPRESA}}", "host": ["{{BASE_METRICAS}}"], "path": ["api","v1","metricas","empresa","{{ID_EMPRESA}}"] }
+          }
+        },
+        {
+          "name": "Embudo de Conversión",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
+            "url": { "raw": "{{BASE_METRICAS}}/api/v1/metricas/embudo/{{ID_EMPRESA}}", "host": ["{{BASE_METRICAS}}"], "path": ["api","v1","metricas","embudo","{{ID_EMPRESA}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Checks",
+      "item": [
+        { "name": "identidad health", "request": { "method": "GET", "url": { "raw": "{{BASE_IDENTIDAD}}/actuator/health", "host": ["{{BASE_IDENTIDAD}}"], "path": ["actuator","health"] } } },
+        { "name": "perfiles health", "request": { "method": "GET", "url": { "raw": "{{BASE_PERFILES}}/actuator/health", "host": ["{{BASE_PERFILES}}"], "path": ["actuator","health"] } } },
+        { "name": "retos health", "request": { "method": "GET", "url": { "raw": "{{BASE_RETOS}}/actuator/health", "host": ["{{BASE_RETOS}}"], "path": ["actuator","health"] } } },
+        { "name": "postulaciones health", "request": { "method": "GET", "url": { "raw": "{{BASE_POSTULACIONES}}/actuator/health", "host": ["{{BASE_POSTULACIONES}}"], "path": ["actuator","health"] } } },
+        { "name": "habilidades health", "request": { "method": "GET", "url": { "raw": "{{BASE_HABILIDADES}}/actuator/health", "host": ["{{BASE_HABILIDADES}}"], "path": ["actuator","health"] } } },
+        { "name": "notificaciones health", "request": { "method": "GET", "url": { "raw": "{{BASE_NOTIFICACIONES}}/actuator/health", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["actuator","health"] } } },
+        { "name": "metricas health", "request": { "method": "GET", "url": { "raw": "{{BASE_METRICAS}}/actuator/health", "host": ["{{BASE_METRICAS}}"], "path": ["actuator","health"] } } }
+      ]
+    }
+  ]
+}
