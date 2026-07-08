@@ -18,7 +18,9 @@
     { "key": "ID_EMPRESA", "value": "" },
     { "key": "ID_TALENTO", "value": "" },
     { "key": "RETO_ID", "value": "" },
-    { "key": "POSTULACION_ID", "value": "" }
+    { "key": "POSTULACION_ID", "value": "" },
+    { "key": "PERFIL_EMPRESA_ID", "value": "" },
+    { "key": "PERFIL_TALENTO_ID", "value": "" }
   ],
   "item": [
     {
@@ -101,6 +103,11 @@
       "item": [
         {
           "name": "Crear Perfil Empresa",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('PERFIL_EMPRESA_ID', res.id);",
+            "pm.test('Perfil empresa creado', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
           "request": {
             "method": "POST",
             "header": [
@@ -113,6 +120,11 @@
         },
         {
           "name": "Crear Perfil Talento",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var res = pm.response.json();",
+            "pm.collectionVariables.set('PERFIL_TALENTO_ID', res.id);",
+            "pm.test('Perfil talento creado', () => pm.response.to.have.status(201));"
+          ], "type": "text/javascript" }}],
           "request": {
             "method": "POST",
             "header": [
@@ -128,7 +140,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_EMPRESA}}" }],
-            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/empresa/{{ID_EMPRESA}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","empresa","{{ID_EMPRESA}}"] }
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/empresa/{{PERFIL_EMPRESA_ID}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","empresa","{{PERFIL_EMPRESA_ID}}"] }
           }
         },
         {
@@ -136,7 +148,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
-            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{ID_TALENTO}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{ID_TALENTO}}"] }
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{PERFIL_TALENTO_ID}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{PERFIL_TALENTO_ID}}"] }
           }
         },
         {
@@ -148,7 +160,7 @@
               { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
             ],
             "body": { "mode": "raw", "raw": "{\n  \"nombreCompleto\": \"Juan Pérez García\",\n  \"ubicacion\": \"Lima, Perú\",\n  \"sobreMi\": \"Desarrollador backend con experiencia en Java y Spring Boot\"\n}" },
-            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{ID_TALENTO}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{ID_TALENTO}}"] }
+            "url": { "raw": "{{BASE_PERFILES}}/api/v1/perfiles/talento/{{PERFIL_TALENTO_ID}}", "host": ["{{BASE_PERFILES}}"], "path": ["api","v1","perfiles","talento","{{PERFIL_TALENTO_ID}}"] }
           }
         }
       ]
