@@ -20,6 +20,7 @@ graph TB
         HS["habilidades-service\n:8085\n/api/v1/habilidades"]
         NS["notificaciones-service\n:8086\n/api/v1/notificaciones"]
         MS["metricas-service\n:8087\n/api/v1/metricas"]
+        AIS["asistente-ia-service\n:8088\n/api/v1/asistente"]
     end
 
     DB[("PostgreSQL 16\nBD: somosayni\n:5432")]
@@ -33,6 +34,7 @@ graph TB
     FE -->|"Bearer JWT"| HS
     FE -->|"Bearer JWT"| NS
     FE -->|"Bearer JWT"| MS
+    FE -->|"Bearer JWT"| AIS
 
     IS --- DB
     PS --- DB
@@ -41,6 +43,7 @@ graph TB
     HS --- DB
     NS --- DB
     MS --->|"lectura snapshot\ntablas: reto, postulacion"| DB
+    AIS -->|"lectura snapshot\ntablas: reto, postulacion, habilidad_validada"| DB
 ```
 
 ---
@@ -56,6 +59,7 @@ graph TB
 | **habilidades-service** | [ayni-01/ayni-habilidades-service](https://github.com/ayni-01/ayni-habilidades-service) | 8085 | Gamificación: insignias y habilidades |
 | **notificaciones-service** | [ayni-01/ayni-notificaciones-service](https://github.com/ayni-01/ayni-notificaciones-service) | 8086 | Alertas centralizadas del sistema |
 | **metricas-service** | [ayni-01/ayni-metricas-service](https://github.com/ayni-01/ayni-metricas-service) | 8087 | Analítica y embudos de conversión |
+| **asistente-ia-service** | [ayni-01/ayni-asistente-ia-service](https://github.com/ayni-01/ayni-asistente-ia-service) | 8088 | Asistente de IA: consultas sobre retos, recomendaciones de aprendizaje y feedback de soluciones (Spring AI + OpenRouter) |
 
 ---
 
@@ -182,6 +186,7 @@ Todos los servicios comparten la misma instancia PostgreSQL (`somosayni`). Cada 
 | habilidades | `insignia`, `habilidad_validada` | `update` |
 | notificaciones | `notificacion` | `update` |
 | metricas | _(sin tablas propias — solo lectura snapshot)_ | `none` |
+| asistente-ia | _(sin tablas propias — solo lectura snapshot)_ | `none` |
 
 > `metricas-service` usa entidades JPA de solo lectura que mapean las tablas `reto` y `postulacion` sin modificarlas.
 
@@ -230,6 +235,9 @@ cd ayni-postulaciones-service && mvn spring-boot:run &
 
 # 4. metricas al final (lee tablas de retos y postulaciones)
 cd ayni-metricas-service && mvn spring-boot:run &
+
+# 5. asistente-ia al final (lee tablas de retos, postulaciones y habilidades)
+cd ayni-asistente-ia-service && mvn spring-boot:run &
 ```
 
 ### 3. Swagger UI por servicio
@@ -258,6 +266,7 @@ cd ayni-metricas-service && mvn spring-boot:run &
 | **Swagger UI habilidades** | http://localhost:8085/swagger-ui.html |
 | **Swagger UI notificaciones** | http://localhost:8086/swagger-ui.html |
 | **Swagger UI métricas** | http://localhost:8087/swagger-ui.html |
+| **Swagger UI asistente-ia** | http://localhost:8088/swagger-ui.html |
 
 > La colección Postman tiene carpetas separadas por servicio, variables compartidas (`TOKEN_EMPRESA`, `TOKEN_TALENTO`, `RETO_ID`, etc.) y scripts que auto-rellenan tokens e IDs al ejecutar los requests de registro/login.
 
