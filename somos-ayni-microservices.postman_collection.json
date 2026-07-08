@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Somos Ayni — Microservicios",
-    "description": "Colección completa para probar los 7 microservicios de Somos Ayni. Flujo de negocio: Registro → Perfiles → Retos → Postulaciones → Evaluación → Insignias → Notificaciones → Métricas",
+    "description": "Colección completa para probar los 8 microservicios de Somos Ayni. Flujo de negocio: Registro → Perfiles → Retos → Postulaciones → Evaluación → Insignias → Notificaciones → Métricas → Asistente IA",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -12,6 +12,7 @@
     { "key": "BASE_HABILIDADES", "value": "http://localhost:8085" },
     { "key": "BASE_NOTIFICACIONES", "value": "http://localhost:8086" },
     { "key": "BASE_METRICAS", "value": "http://localhost:8087" },
+    { "key": "BASE_ASISTENTE", "value": "http://localhost:8088" },
     { "key": "TOKEN_EMPRESA", "value": "" },
     { "key": "TOKEN_TALENTO", "value": "" },
     { "key": "ID_EMPRESA", "value": "" },
@@ -368,6 +369,43 @@
       ]
     },
     {
+      "name": "8 — Asistente IA",
+      "item": [
+        {
+          "name": "Consultar sobre Reto (US21)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"pregunta\": \"¿Qué tecnologías necesito para resolver este reto?\"\n}" },
+            "url": { "raw": "{{BASE_ASISTENTE}}/api/v1/asistente/retos/{{RETO_ID}}/consulta", "host": ["{{BASE_ASISTENTE}}"], "path": ["api","v1","asistente","retos","{{RETO_ID}}","consulta"] }
+          }
+        },
+        {
+          "name": "Recomendaciones de Aprendizaje (US22)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }],
+            "url": { "raw": "{{BASE_ASISTENTE}}/api/v1/asistente/recomendaciones", "host": ["{{BASE_ASISTENTE}}"], "path": ["api","v1","asistente","recomendaciones"] }
+          }
+        },
+        {
+          "name": "Feedback de Enfoque de Solución (US23)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{TOKEN_TALENTO}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"enfoqueSolucion\": \"Voy a usar componentes funcionales de React con hooks y CSS Grid para el layout responsive\"\n}" },
+            "url": { "raw": "{{BASE_ASISTENTE}}/api/v1/asistente/postulaciones/{{POSTULACION_ID}}/feedback", "host": ["{{BASE_ASISTENTE}}"], "path": ["api","v1","asistente","postulaciones","{{POSTULACION_ID}}","feedback"] }
+          }
+        }
+      ]
+    },
+    {
       "name": "Health Checks",
       "item": [
         { "name": "identidad health", "request": { "method": "GET", "url": { "raw": "{{BASE_IDENTIDAD}}/actuator/health", "host": ["{{BASE_IDENTIDAD}}"], "path": ["actuator","health"] } } },
@@ -376,7 +414,8 @@
         { "name": "postulaciones health", "request": { "method": "GET", "url": { "raw": "{{BASE_POSTULACIONES}}/actuator/health", "host": ["{{BASE_POSTULACIONES}}"], "path": ["actuator","health"] } } },
         { "name": "habilidades health", "request": { "method": "GET", "url": { "raw": "{{BASE_HABILIDADES}}/actuator/health", "host": ["{{BASE_HABILIDADES}}"], "path": ["actuator","health"] } } },
         { "name": "notificaciones health", "request": { "method": "GET", "url": { "raw": "{{BASE_NOTIFICACIONES}}/actuator/health", "host": ["{{BASE_NOTIFICACIONES}}"], "path": ["actuator","health"] } } },
-        { "name": "metricas health", "request": { "method": "GET", "url": { "raw": "{{BASE_METRICAS}}/actuator/health", "host": ["{{BASE_METRICAS}}"], "path": ["actuator","health"] } } }
+        { "name": "metricas health", "request": { "method": "GET", "url": { "raw": "{{BASE_METRICAS}}/actuator/health", "host": ["{{BASE_METRICAS}}"], "path": ["actuator","health"] } } },
+        { "name": "asistente-ia health", "request": { "method": "GET", "url": { "raw": "{{BASE_ASISTENTE}}/actuator/health", "host": ["{{BASE_ASISTENTE}}"], "path": ["actuator","health"] } } }
       ]
     }
   ]
