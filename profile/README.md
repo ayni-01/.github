@@ -6,7 +6,7 @@
 
 ## Arquitectura de Microservicios
 
-El backend está organizado como **7 microservicios independientes**, cada uno con su propio repositorio dentro de la organización [`ayni-01`](https://github.com/ayni-01). Cada servicio es un Bounded Context de DDD con arquitectura hexagonal completa.
+El backend está organizado como **8 microservicios independientes**, cada uno con su propio repositorio dentro de la organización [`ayni-01`](https://github.com/ayni-01). Cada servicio es un Bounded Context de DDD con arquitectura hexagonal completa.
 
 ```mermaid
 graph TB
@@ -194,7 +194,7 @@ Todos los servicios comparten la misma instancia PostgreSQL (`somosayni`). Cada 
 
 ## Variables de Entorno
 
-Todos los servicios requieren estas variables (valor idéntico de `JWT_SECRET` en los 7):
+Todos los servicios requieren estas variables (valor idéntico de `JWT_SECRET` en los 8; `ayni-asistente-ia-service` además requiere `OPENROUTER_API_KEY`):
 
 ```env
 JWT_SECRET=somosayni-jwt-secret-key-que-debe-ser-muy-larga-para-hs256-algoritmo-seguro
