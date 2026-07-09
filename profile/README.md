@@ -194,7 +194,7 @@ Todos los servicios comparten la misma instancia PostgreSQL (`somosayni`). Cada 
 
 ## Variables de Entorno
 
-Todos los servicios requieren estas variables (valor idéntico de `JWT_SECRET` en los 8; `ayni-asistente-ia-service` además requiere `OPENROUTER_API_KEY`):
+Todos los servicios requieren estas variables (valor idéntico de `JWT_SECRET` en los 8; `ayni-asistente-ia-service` además requiere `OPENAI_API_KEY`):
 
 ```env
 JWT_SECRET=somosayni-jwt-secret-key-que-debe-ser-muy-larga-para-hs256-algoritmo-seguro
